@@ -63,3 +63,10 @@ end, { desc = 'Save file' })
 map('n', '<C-x><C-c>', ':qa<CR>', { desc = 'Quit all' })
 map('n', '<C-x>b', ':Telescope buffers<CR>', { desc = 'Switch buffer' })
 map('n', '<C-x>k', ':bd<CR>', { desc = 'Kill buffer' })
+
+-- Window navigation
+map('n', '<C-w><C-l>', '<C-w>l', { desc = 'Move to right window' })
+map('n', '<C-w><C-h>', '<C-w>h', { desc = 'Move to left window' })
+map('n', '<C-w><C-j>', '<C-w>j', { desc = 'Move to bottom window' })
+map('n', '<C-w><C-k>', '<C-w>k', { desc = 'Move to top window' })
+map('n', '<C-Tab>', '<C-w>w', { desc = 'Cycle through windows' })

@@ -24,6 +24,8 @@ return {
         mappings = {
           ["<space>"] = "toggle_node",
           ["<cr>"] = "open",
+          ["<2-LeftMouse>"] = "open",
+          ["<LeftRelease>"] = "open",
           ["S"] = "open_split",
           ["s"] = "open_vsplit",
           ["t"] = "open_tabnew",
