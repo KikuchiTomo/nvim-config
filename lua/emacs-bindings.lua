@@ -70,3 +70,12 @@ map('n', '<C-w><C-h>', '<C-w>h', { desc = 'Move to left window' })
 map('n', '<C-w><C-j>', '<C-w>j', { desc = 'Move to bottom window' })
 map('n', '<C-w><C-k>', '<C-w>k', { desc = 'Move to top window' })
 map('n', '<C-Tab>', '<C-w>w', { desc = 'Cycle through windows' })
+
+-- Buffer (tab) navigation - easier shortcuts
+map('n', '<M-l>', ':BufferLineCycleNext<CR>', { desc = 'Next buffer' })
+map('n', '<M-h>', ':BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
+map('n', '<M-Right>', ':BufferLineCycleNext<CR>', { desc = 'Next buffer' })
+map('n', '<M-Left>', ':BufferLineCyclePrev<CR>', { desc = 'Previous buffer' })
+map('n', '<M-w>', ':bd<CR>', { desc = 'Close current buffer' })
+map('n', '<M-S-w>', ':BufferLinePickClose<CR>', { desc = 'Pick buffer to close' })
+map('n', '<M-p>', ':BufferLinePick<CR>', { desc = 'Pick buffer' })

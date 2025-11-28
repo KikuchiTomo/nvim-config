@@ -28,6 +28,9 @@ return {
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr }
 
+        -- Print message when LSP attaches
+        print(string.format("LSP attached: %s", client.name))
+
         -- Go to definition (Cmd+Click equivalent)
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
         vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, opts)
@@ -46,13 +49,14 @@ return {
         end, opts)
       end
 
-      -- Setup mason-lspconfig
+      -- Setup mason-lspconfig with automatic server setup
       require("mason-lspconfig").setup({
         ensure_installed = {
           "lua_ls",
           "ts_ls",
           "pyright",
           "rust_analyzer",
+          "clangd",  -- C/C++ LSP
           "html",
           "cssls",
           "jsonls",
@@ -60,34 +64,37 @@ return {
         automatic_installation = true,
       })
 
-      -- Setup each LSP server
-      local servers = { "ts_ls", "pyright", "rust_analyzer", "html", "cssls", "jsonls" }
+      -- Automatically setup all installed servers
+      require("mason-lspconfig").setup_handlers({
+        -- Default handler for all servers
+        function(server_name)
+          lspconfig[server_name].setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+          })
+        end,
 
-      for _, server in ipairs(servers) do
-        lspconfig[server].setup({
-          on_attach = on_attach,
-          capabilities = capabilities,
-        })
-      end
-
-      -- Lua-specific setup
-      lspconfig.lua_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" },
+        -- Custom handler for lua_ls
+        ["lua_ls"] = function()
+          lspconfig.lua_ls.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { "vim" },
+                },
+                workspace = {
+                  library = vim.api.nvim_get_runtime_file("", true),
+                  checkThirdParty = false,
+                },
+                telemetry = {
+                  enable = false,
+                },
+              },
             },
-            workspace = {
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-            telemetry = {
-              enable = false,
-            },
-          },
-        },
+          })
+        end,
       })
     end,
   },

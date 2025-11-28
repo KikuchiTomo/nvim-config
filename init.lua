@@ -55,3 +55,34 @@ require("lsp-config")
 
 -- Mouse configuration for Cmd+Click navigation
 require("mouse-config")
+
+-- Command aliases for easier access
+vim.cmd([[
+  command! F Telescope find_files
+  command! Rg Telescope live_grep
+  command! B Telescope buffers
+  command! H Telescope help_tags
+  command! R Telescope oldfiles
+  command! C Telescope commands
+  command! K Telescope keymaps
+]])
+
+-- Even shorter aliases
+vim.api.nvim_create_user_command('Ff', 'Telescope find_files', {})
+vim.api.nvim_create_user_command('Fg', 'Telescope live_grep', {})
+vim.api.nvim_create_user_command('Fb', 'Telescope buffers', {})
+
+-- LSP debugging commands
+vim.api.nvim_create_user_command('LspStatus', function()
+  local clients = vim.lsp.get_clients({bufnr = 0})
+  if #clients == 0 then
+    print("No LSP clients attached to this buffer")
+  else
+    print("LSP clients attached:")
+    for _, client in ipairs(clients) do
+      print("  - " .. client.name)
+    end
+  end
+end, {})
+
+vim.api.nvim_create_user_command('LspRestart', 'LspStop | sleep 100m | LspStart', {})
