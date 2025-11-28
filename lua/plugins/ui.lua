@@ -100,9 +100,9 @@ return {
     event = "VeryLazy",
     config = function()
       require("which-key").setup({
-        window = {
+        preset = "modern",
+        win = {
           border = "rounded",
-          position = "bottom",
         },
       })
     end,

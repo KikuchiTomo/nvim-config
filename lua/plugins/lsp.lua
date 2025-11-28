@@ -1,4 +1,17 @@
 return {
+  -- Mason (LSP installer) - must be loaded first
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+  },
+
   -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
@@ -8,7 +21,10 @@ return {
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
-      require("mason").setup()
+      local lspconfig = require("lspconfig")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- Setup mason-lspconfig first
       require("mason-lspconfig").setup({
         ensure_installed = {
           "lua_ls",
@@ -22,9 +38,6 @@ return {
         },
         automatic_installation = true,
       })
-
-      local lspconfig = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- Common on_attach function for all LSP servers
       local on_attach = function(client, bufnr)
@@ -48,7 +61,7 @@ return {
         end, opts)
       end
 
-      -- Setup language servers
+      -- Setup each language server
       local servers = {
         "lua_ls",
         "ts_ls",
@@ -61,35 +74,26 @@ return {
       }
 
       for _, server in ipairs(servers) do
-        lspconfig[server].setup({
-          on_attach = on_attach,
-          capabilities = capabilities,
-        })
-      end
-
-      -- Lua specific settings
-      lspconfig.lua_ls.setup({
-        on_attach = on_attach,
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" },
+        if server == "lua_ls" then
+          lspconfig.lua_ls.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                diagnostics = {
+                  globals = { "vim" },
+                },
+              },
             },
-          },
-        },
-      })
+          })
+        else
+          lspconfig[server].setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+          })
+        end
+      end
     end,
-  },
-
-  -- Mason (LSP installer)
-  {
-    "williamboman/mason.nvim",
-    build = ":MasonUpdate",
-  },
-
-  {
-    "williamboman/mason-lspconfig.nvim",
   },
 
   -- Telescope for fuzzy finding (used for references, etc.)
