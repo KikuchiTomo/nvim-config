@@ -1,10 +1,14 @@
--- Diagnostic configuration
+-- Diagnostic configuration - disable inline, use float only
 vim.diagnostic.config({
-  virtual_text = {
-    prefix = '●',
-    source = "if_many",
+  virtual_text = false,
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = " ",
+      [vim.diagnostic.severity.INFO] = " ",
+    },
   },
-  signs = true,
   underline = true,
   update_in_insert = false,
   severity_sort = true,
@@ -31,13 +35,6 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
 -- Update time for CursorHold event
 vim.opt.updatetime = 300
-
--- Sign column icons
-local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-for type, icon in pairs(signs) do
-  local hl = "DiagnosticSign" .. type
-  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-end
 
 -- Keybindings for diagnostics
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic' })
