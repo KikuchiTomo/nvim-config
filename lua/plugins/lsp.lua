@@ -24,21 +24,6 @@ return {
       local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Setup mason-lspconfig first
-      require("mason-lspconfig").setup({
-        ensure_installed = {
-          "lua_ls",
-          "ts_ls",
-          "pyright",
-          "rust_analyzer",
-          "gopls",
-          "html",
-          "cssls",
-          "jsonls",
-        },
-        automatic_installation = true,
-      })
-
       -- Common on_attach function for all LSP servers
       local on_attach = function(client, bufnr)
         local opts = { buffer = bufnr }
@@ -61,38 +46,49 @@ return {
         end, opts)
       end
 
-      -- Setup each language server
-      local servers = {
-        "lua_ls",
-        "ts_ls",
-        "pyright",
-        "rust_analyzer",
-        "gopls",
-        "html",
-        "cssls",
-        "jsonls",
-      }
+      -- Setup mason-lspconfig
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "lua_ls",
+          "ts_ls",
+          "pyright",
+          "rust_analyzer",
+          "html",
+          "cssls",
+          "jsonls",
+        },
+        automatic_installation = true,
+      })
+
+      -- Setup each LSP server
+      local servers = { "ts_ls", "pyright", "rust_analyzer", "html", "cssls", "jsonls" }
 
       for _, server in ipairs(servers) do
-        if server == "lua_ls" then
-          lspconfig.lua_ls.setup({
-            on_attach = on_attach,
-            capabilities = capabilities,
-            settings = {
-              Lua = {
-                diagnostics = {
-                  globals = { "vim" },
-                },
-              },
-            },
-          })
-        else
-          lspconfig[server].setup({
-            on_attach = on_attach,
-            capabilities = capabilities,
-          })
-        end
+        lspconfig[server].setup({
+          on_attach = on_attach,
+          capabilities = capabilities,
+        })
       end
+
+      -- Lua-specific setup
+      lspconfig.lua_ls.setup({
+        on_attach = on_attach,
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { "vim" },
+            },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
+            telemetry = {
+              enable = false,
+            },
+          },
+        },
+      })
     end,
   },
 

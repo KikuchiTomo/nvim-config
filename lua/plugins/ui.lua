@@ -76,19 +76,39 @@ return {
     end,
   },
 
-  -- Indentation guides
+  -- Chunk highlighting (indent and bracket visualization)
   {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
+    "shellRaining/hlchunk.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
-      require("ibl").setup({
-        indent = {
-          char = "│",
+      require("hlchunk").setup({
+        chunk = {
+          enable = true,
+          style = {
+            { fg = "#806d9c" },
+          },
+          chars = {
+            horizontal_line = "─",
+            vertical_line = "│",
+            left_top = "╭",
+            left_bottom = "╰",
+            right_arrow = "─",
+          },
         },
-        scope = {
-          enabled = true,
-          show_start = true,
-          show_end = false,
+        indent = {
+          enable = true,
+          chars = {
+            "│",
+          },
+          style = {
+            { fg = "#3b4261" },
+          },
+        },
+        line_num = {
+          enable = false,
+        },
+        blank = {
+          enable = false,
         },
       })
     end,

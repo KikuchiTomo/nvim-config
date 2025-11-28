@@ -1,12 +1,16 @@
 -- Basic settings
 vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.smartindent = true
 vim.opt.termguicolors = true
 vim.opt.mouse = "a"
+
+-- Japanese language settings
+vim.opt.helplang = "ja,en"  -- Prefer Japanese help, fallback to English
+vim.opt.encoding = "utf-8"
 
 -- Clipboard settings for iTerm2
 -- Use OSC 52 for clipboard integration
@@ -22,6 +26,9 @@ vim.g.clipboard = {
   },
 }
 vim.opt.clipboard = "unnamedplus"
+
+-- Suppress lspconfig deprecation warnings globally
+vim.deprecate = function() end
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
