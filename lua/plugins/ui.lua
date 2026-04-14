@@ -165,6 +165,14 @@ return {
             },
             opts = { skip = true },
           },
+          -- E486: Pattern not found を控えめな mini 表示に降格（赤字エラー抑制）
+          {
+            filter = {
+              event = "msg_show",
+              find = "E486",
+            },
+            view = "mini",
+          },
         },
         presets = {
           bottom_search = true,
