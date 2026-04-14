@@ -17,24 +17,25 @@ vim.opt.mouse = "a"
 vim.opt.helplang = "ja,en"  -- Prefer Japanese help, fallback to English
 vim.opt.encoding = "utf-8"
 
--- Clipboard settings for iTerm2
--- Use OSC 52 for copy only. Paste via OSC 52 は iTerm2 がデフォルトで応答を返さず
--- 「Waiting for OSC 52 response」で固まるため、paste 側は内部レジスタからローカルに読む。
-vim.g.clipboard = {
-  name = 'OSC 52',
-  copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-  },
-  paste = {
-    ['+'] = function()
-      return vim.split(vim.fn.getreg('"'), '\n'), vim.fn.getregtype('"')
-    end,
-    ['*'] = function()
-      return vim.split(vim.fn.getreg('"'), '\n'), vim.fn.getregtype('"')
-    end,
-  },
-}
+-- Clipboard: ローカルは pbcopy/pbpaste 自動検出、SSH 越しのみ OSC 52 にフォールバック。
+-- OSC 52 の paste は iTerm2 が応答を返さず固まるため、内部レジスタから読む。
+if vim.env.SSH_TTY then
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+      ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+      ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    },
+    paste = {
+      ['+'] = function()
+        return vim.split(vim.fn.getreg('"'), '\n'), vim.fn.getregtype('"')
+      end,
+      ['*'] = function()
+        return vim.split(vim.fn.getreg('"'), '\n'), vim.fn.getregtype('"')
+      end,
+    },
+  }
+end
 vim.opt.clipboard = "unnamedplus"
 
 -- Suppress lspconfig deprecation warnings globally
