@@ -64,6 +64,23 @@ map('n', '<C-x><C-c>', ':qa<CR>', { desc = 'Quit all' })
 map('n', '<C-x>b', ':Telescope buffers<CR>', { desc = 'Switch buffer' })
 map('n', '<C-x>k', ':bd<CR>', { desc = 'Kill buffer' })
 
+-- Comment toggle (VSCode-style Ctrl+/)
+-- ターミナルでは <C-/> は <C-_> (0x1F) として送られるのが一般的。
+-- CSI-u 対応端末では <C-/> も別イベントとして届くため両方バインドする。
+map('n', '<C-_>', 'gcc', { remap = true, desc = 'Toggle comment (line)' })
+map('n', '<C-/>', 'gcc', { remap = true, desc = 'Toggle comment (line)' })
+map('v', '<C-_>', 'gc',  { remap = true, desc = 'Toggle comment (selection)' })
+map('v', '<C-/>', 'gc',  { remap = true, desc = 'Toggle comment (selection)' })
+map('i', '<C-_>', '<C-o>gcc', { remap = true, desc = 'Toggle comment (line)' })
+map('i', '<C-/>', '<C-o>gcc', { remap = true, desc = 'Toggle comment (line)' })
+
+-- Window management (Emacs-style)
+map('n', '<C-x>o', '<C-w>w', { desc = 'Other window (next)' })
+map('n', '<C-x>0', ':close<CR>', { desc = 'Delete current window' })
+map('n', '<C-x>1', ':only<CR>', { desc = 'Delete other windows' })
+map('n', '<C-x>2', ':split<CR>', { desc = 'Split window horizontally' })
+map('n', '<C-x>3', ':vsplit<CR>', { desc = 'Split window vertically' })
+
 -- Window navigation
 map('n', '<C-w><C-l>', '<C-w>l', { desc = 'Move to right window' })
 map('n', '<C-w><C-h>', '<C-w>h', { desc = 'Move to left window' })

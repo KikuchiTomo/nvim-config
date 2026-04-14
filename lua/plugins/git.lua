@@ -96,6 +96,11 @@ return {
   -- GitHub integration for PR reviews
   {
     "pwntester/octo.nvim",
+    -- gh CLI が無い環境（リモートホスト等）ではロードしない。
+    -- octo.nvim は gh を呼び出すラッパーで、未インストール時 setup が落ちるため。
+    cond = function()
+      return vim.fn.executable("gh") == 1
+    end,
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope.nvim',

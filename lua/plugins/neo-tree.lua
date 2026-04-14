@@ -61,8 +61,19 @@ return {
     })
 
     -- Keybinding to toggle file explorer
-    vim.keymap.set('n', '<C-x>d', ':Neotree toggle<CR>', { desc = 'Toggle file explorer' })
+    vim.keymap.set('n', '<C-x><C-d>', ':Neotree toggle<CR>', { desc = 'Toggle file explorer (Emacs dired風)' })
     vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'Toggle file explorer' })
+
+    -- neo-tree バッファ内で <C-x> 単独が走ると nomodifiable で E21 が出るため、
+    -- 該当バッファに限定して <C-x> を無効化し、<C-x><C-d> は明示的に buffer-local 登録する。
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("NeoTreeCxFix", { clear = true }),
+      pattern = "neo-tree",
+      callback = function(ev)
+        vim.keymap.set('n', '<C-x>', '<Nop>', { buffer = ev.buf, silent = true })
+        vim.keymap.set('n', '<C-x><C-d>', ':Neotree toggle<CR>', { buffer = ev.buf, silent = true, desc = 'Toggle file explorer' })
+      end,
+    })
 
     -- Git status symbol colors (re-apply on ColorScheme change so themes don't wipe them)
     local function apply_git_hl()
