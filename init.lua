@@ -1,3 +1,8 @@
+-- Leader keys (プラグイン読み込み前に設定する必要がある。
+-- プラグインが <leader> を使った map を定義する時点の値が固定されるため)
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 -- Basic settings
 vim.opt.number = true
 vim.opt.relativenumber = false
@@ -44,11 +49,17 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Emacs 風キーバインドを使うかのフラグ。
+-- true にして再起動すると emacs-bindings.lua と各プラグインの <C-x> 系 map が復活する。
+vim.g.use_emacs_bindings = false
+
 -- Load plugins
 require("lazy").setup("plugins")
 
 -- Emacs-style keybindings
-require("emacs-bindings")
+if vim.g.use_emacs_bindings then
+  require("emacs-bindings")
+end
 
 -- LSP and diagnostics configuration
 require("lsp-config")

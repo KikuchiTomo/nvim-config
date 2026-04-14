@@ -119,7 +119,11 @@ return {
       vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>', { desc = 'Live grep' })
       vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', { desc = 'Find buffers' })
       vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', { desc = 'Help tags' })
-      vim.keymap.set('n', '<C-x><C-f>', ':Telescope find_files<CR>', { desc = 'Find files (Emacs-style)' })
+
+      -- Emacs 風 <C-x><C-f> は init.lua の vim.g.use_emacs_bindings フラグで制御。
+      if vim.g.use_emacs_bindings then
+        vim.keymap.set('n', '<C-x><C-f>', ':Telescope find_files<CR>', { desc = 'Find files (Emacs-style)' })
+      end
     end,
   },
 }
