@@ -18,7 +18,8 @@ vim.opt.helplang = "ja,en"  -- Prefer Japanese help, fallback to English
 vim.opt.encoding = "utf-8"
 
 -- Clipboard settings for iTerm2
--- Use OSC 52 for clipboard integration
+-- Use OSC 52 for copy only. Paste via OSC 52 は iTerm2 がデフォルトで応答を返さず
+-- 「Waiting for OSC 52 response」で固まるため、paste 側は内部レジスタからローカルに読む。
 vim.g.clipboard = {
   name = 'OSC 52',
   copy = {
@@ -26,8 +27,12 @@ vim.g.clipboard = {
     ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
   },
   paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+    ['+'] = function()
+      return vim.split(vim.fn.getreg('"'), '\n'), vim.fn.getregtype('"')
+    end,
+    ['*'] = function()
+      return vim.split(vim.fn.getreg('"'), '\n'), vim.fn.getregtype('"')
+    end,
   },
 }
 vim.opt.clipboard = "unnamedplus"
@@ -66,6 +71,9 @@ require("lsp-config")
 
 -- Mouse configuration for Cmd+Click navigation
 require("mouse-config")
+
+-- Remote clipboard bridge: remote-nvim 経由でも yank が macOS クリップボードに届くようにする
+require("remote-clipboard").setup()
 
 -- Command aliases for easier access
 vim.cmd([[
