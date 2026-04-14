@@ -72,9 +72,6 @@ require("lsp-config")
 -- Mouse configuration for Cmd+Click navigation
 require("mouse-config")
 
--- Remote clipboard bridge: remote-nvim 経由でも yank が macOS クリップボードに届くようにする
-require("remote-clipboard").setup()
-
 -- Command aliases for easier access
 vim.cmd([[
   command! F Telescope find_files
