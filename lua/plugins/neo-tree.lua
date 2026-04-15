@@ -68,6 +68,28 @@ return {
             local path = node and node:get_id() or vim.loop.cwd()
             vim.cmd("LazyGit " .. vim.fn.fnameescape(path))
           end,
+          ["fg"] = function(state)
+            local node = state.tree:get_node()
+            local path = node and node:get_id() or vim.loop.cwd()
+            if node and node.type == "file" then
+              path = vim.fn.fnamemodify(path, ":h")
+            end
+            require("telescope.builtin").live_grep({
+              search_dirs = { path },
+              prompt_title = "Live Grep: " .. vim.fn.fnamemodify(path, ":~:."),
+            })
+          end,
+          ["ff"] = function(state)
+            local node = state.tree:get_node()
+            local path = node and node:get_id() or vim.loop.cwd()
+            if node and node.type == "file" then
+              path = vim.fn.fnamemodify(path, ":h")
+            end
+            require("telescope.builtin").find_files({
+              search_dirs = { path },
+              prompt_title = "Find Files: " .. vim.fn.fnamemodify(path, ":~:."),
+            })
+          end,
         },
       },
     })
