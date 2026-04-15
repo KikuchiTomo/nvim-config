@@ -90,6 +90,12 @@ return {
     },
     config = function()
       vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'LazyGit' })
+
+      -- gh CLI: browser-based PR workflow (uses .github/pull_request_template.md)
+      if vim.fn.executable("gh") == 1 then
+        vim.keymap.set('n', '<leader>gP', ':!gh pr create --web<CR>', { desc = 'Create PR (browser)' })
+        vim.keymap.set('n', '<leader>gV', ':!gh pr view --web<CR>',   { desc = 'View PR (browser)' })
+      end
     end,
   },
 
