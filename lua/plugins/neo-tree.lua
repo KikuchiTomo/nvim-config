@@ -63,6 +63,11 @@ return {
               use_image_nvim = false,
             },
           },
+          ["gg"] = function(state)
+            local node = state.tree:get_node()
+            local path = node and node:get_id() or vim.loop.cwd()
+            vim.cmd("LazyGit " .. vim.fn.fnameescape(path))
+          end,
         },
       },
     })
