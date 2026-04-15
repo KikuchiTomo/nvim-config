@@ -71,9 +71,9 @@ return {
       group = vim.api.nvim_create_augroup("NeoTreeAutoPreview", { clear = true }),
       pattern = "neo-tree",
       callback = function()
-        vim.schedule(function()
-          vim.api.nvim_feedkeys("P", "n", false)
-        end)
+        vim.defer_fn(function()
+          vim.api.nvim_feedkeys("P", "m", false)
+        end, 100)
       end,
     })
 
