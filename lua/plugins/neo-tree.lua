@@ -56,8 +56,25 @@ return {
           ["x"] = "cut_to_clipboard",
           ["p"] = "paste_from_clipboard",
           ["q"] = "close_window",
+          ["P"] = {
+            "toggle_preview",
+            config = {
+              use_float = false,
+              use_image_nvim = false,
+            },
+          },
         },
       },
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      group = vim.api.nvim_create_augroup("NeoTreeAutoPreview", { clear = true }),
+      pattern = "neo-tree",
+      callback = function()
+        vim.schedule(function()
+          vim.api.nvim_feedkeys("P", "n", false)
+        end)
+      end,
     })
 
     -- Keybinding to toggle file explorer
