@@ -21,10 +21,14 @@ return {
         cpp = { "clang-format" },
         sh = { "shfmt" },
       },
-      format_on_save = {
+      format_on_save = false,
+    })
+
+    vim.keymap.set({ "n", "v" }, "<leader>f", function()
+      require("conform").format({
         timeout_ms = 3000,
         lsp_format = "fallback",
-      },
-    })
+      })
+    end, { desc = "Format buffer" })
   end,
 }
