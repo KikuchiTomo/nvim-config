@@ -100,7 +100,26 @@ return {
       callback = function()
         vim.defer_fn(function()
           vim.api.nvim_feedkeys("P", "m", false)
-        end, 100)
+        end, 50)
+      end,
+    })
+
+    -- プレビューバッファでは LSP・gitsigns・conform を無効化して高速化
+    vim.api.nvim_create_autocmd("BufEnter", {
+      group = vim.api.nvim_create_augroup("NeoTreePreviewOptimize", { clear = true }),
+      callback = function(ev)
+        local buf = ev.buf
+        if not vim.b[buf].neo_tree_preview then return end
+        -- LSP をアタッチさせない
+        vim.b[buf].lsp_disabled = true
+        vim.defer_fn(function()
+          for _, client in ipairs(vim.lsp.get_clients({ bufnr = buf })) do
+            vim.lsp.buf_detach_client(buf, client.id)
+          end
+        end, 10)
+        -- gitsigns をスキップ
+        vim.b[buf].gitsigns_head = nil
+        pcall(function() require("gitsigns").detach(buf) end)
       end,
     })
 
