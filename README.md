@@ -20,12 +20,16 @@
 ### 2. ファイルエクスプローラー (Neo-tree)
 - `Ctrl+x d` or `<leader>e`: ファイルエクスプローラーの表示/非表示
 - `Enter`: ファイルを開く
+- `P`: プレビューモードのトグル（開くとカーソル移動でファイル内容が自動表示）
 - `a`: 新規ファイル/ディレクトリ作成
 - `d`: 削除
 - `r`: リネーム
 - `y`: コピー
 - `x`: カット
 - `p`: ペースト
+- `gg`: カーソル位置のリポジトリでLazyGitを開く
+- `ff`: カーソル位置のディレクトリ配下でファイル検索（Telescope）
+- `fg`: カーソル位置のディレクトリ配下でテキスト検索（Telescope live grep）
 
 ### 3. LSP機能 (定義ジャンプ・参照検索)
 - `gd` or `Ctrl+]`: 定義にジャンプ
@@ -34,7 +38,7 @@
 - `gi`: 実装にジャンプ
 - `<leader>rn`: リネーム
 - `<leader>ca`: コードアクション
-- `<leader>f`: フォーマット
+- `<leader>f`: フォーマット（conform.nvim経由、手動実行）
 - `Ctrl+LeftMouse` or `Alt+LeftMouse`: マウスクリックで定義にジャンプ
 
 ### 4. 補完機能 (nvim-cmp)
@@ -61,6 +65,8 @@
 
 #### LazyGit
 - `<leader>gg`: LazyGitを開く
+- `<leader>gP`: PRをブラウザで作成（`gh pr create --web`）
+- `<leader>gV`: 現在のブランチのPRをブラウザで表示
 
 #### Octo (GitHub PR Review)
 - `<leader>op`: PRリスト表示
@@ -77,6 +83,25 @@
 - `<leader>dv`: Diffビューを開く
 - `<leader>dc`: Diffビューを閉じる
 - `<leader>dh`: ファイル履歴を表示
+
+### 7. コメント (Comment.nvim)
+- `gcc`: 行コメントのトグル
+- `gc` + モーション: ブロックコメントのトグル（例: `gcap` で段落）
+- ビジュアル選択 → `gc`: 選択範囲をコメント
+
+### 8. Undo履歴 (undotree)
+- `<leader>u`: undoツリーの表示/非表示
+
+### 9. 構文解析 (Treesitter)
+- `<C-space>`: 構文ノードを選択（連打で範囲拡大）
+- `<BS>`: 選択範囲を一段縮小
+
+### 10. タブ操作
+- `<M-h>` (Alt+h): 前のタブ
+- `<M-l>` (Alt+l): 次のタブ
+- `<leader>tn`: 新規タブ
+- `<leader>tc`: タブを閉じる
+- `<leader>to`: 他のタブを全て閉じる
 
 ### その他の便利なキーバインド
 - `<leader>ff`: ファイル検索
