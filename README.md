@@ -107,6 +107,14 @@ brew install lazygit
 
 # GitHub CLI (PR Review用)
 brew install gh
+
+# フォーマッタ (conform.nvim用)
+brew install stylua black rustfmt prettier shfmt clang-format
+```
+
+Mason 経由でもインストールできます:
+```vim
+:MasonInstall stylua black prettierd shfmt clang-format
 ```
 
 ## LSPサーバー
