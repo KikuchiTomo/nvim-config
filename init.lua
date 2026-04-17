@@ -108,5 +108,5 @@ vim.api.nvim_create_user_command('LspRestart', 'LspStop | sleep 100m | LspStart'
 vim.keymap.set('n', '<leader>tn', ':tabnew<CR>',      { desc = 'New tab' })
 vim.keymap.set('n', '<leader>tc', ':tabclose<CR>',    { desc = 'Close tab' })
 vim.keymap.set('n', '<leader>to', ':tabonly<CR>',     { desc = 'Close other tabs' })
-vim.keymap.set('n', '<M-h>',      ':tabprevious<CR>', { desc = 'Prev tab' })
-vim.keymap.set('n', '<M-l>',      ':tabnext<CR>',     { desc = 'Next tab' })
+vim.keymap.set('n', '[t',         ':tabprevious<CR>', { desc = 'Prev tab' })
+vim.keymap.set('n', ']t',         ':tabnext<CR>',     { desc = 'Next tab' })
