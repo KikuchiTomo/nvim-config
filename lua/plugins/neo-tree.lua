@@ -98,9 +98,16 @@ return {
       group = vim.api.nvim_create_augroup("NeoTreeAutoPreview", { clear = true }),
       pattern = "neo-tree",
       callback = function()
-        vim.defer_fn(function()
-          vim.api.nvim_feedkeys("P", "m", false)
-        end, 50)
+        local function try_preview(attempts)
+          if attempts <= 0 then return end
+          vim.defer_fn(function()
+            local ok = pcall(vim.api.nvim_feedkeys, "P", "m", false)
+            if not ok then
+              try_preview(attempts - 1)
+            end
+          end, 200)
+        end
+        try_preview(3)
       end,
     })
 
