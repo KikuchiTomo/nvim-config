@@ -2,6 +2,7 @@ return {
   -- Mason (LSP installer) - must be loaded first
   {
     "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate", "MasonLog" },
     config = function()
       require("mason").setup()
     end,
@@ -9,12 +10,14 @@ return {
 
   {
     "williamboman/mason-lspconfig.nvim",
+    lazy = true,
     dependencies = { "williamboman/mason.nvim" },
   },
 
   -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -72,17 +75,40 @@ return {
       end
 
       -- C/C++ specific setup
-      lspconfig.clangd.setup({
-        on_attach = on_attach,
+      -- 注意: mason-lspconfig は nvim 0.11+ のネイティブ vim.lsp.config/vim.lsp.enable 経由で
+      -- clangd を有効化するため、lspconfig.clangd.setup() は丸ごと無視される（cmd が既定の
+      -- { "clangd" } になり ssh 化も引数も効かない）。そのため clangd はネイティブ API で設定する。
+      --
+      -- agv1 配下で nvim を起動している場合のみ、VM 上の clangd を ssh + path-mappings で使う。
+      -- （macOS ではビルドできず、compile_commands.json も /media/psf の Linux パスで生成されるため）
+      --   local (nvim/mac):  /Users/tomokikuchi/repos/agv1
+      --   remote(clangd/vm): /media/psf/repos/agv1   （Parallels 共有フォルダの実体マウント）
+      -- 判定は nvim の起動 cwd で行う（worktree ごとに nvim を起動する運用のため）。
+      local REMOTE_CLANGD_ROOT = "/Users/tomokikuchi/repos/agv1"
+      local clangd_args = {
+        "--background-index",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=llvm",
+      }
+      local function under_agv1(dir)
+        dir = vim.fs.normalize(dir or "")
+        return dir == REMOTE_CLANGD_ROOT or vim.startswith(dir, REMOTE_CLANGD_ROOT .. "/")
+      end
+      local clangd_cmd
+      if under_agv1(vim.fn.getcwd()) then
+        clangd_cmd = vim.list_extend(
+          { "ssh", "parallels", "clangd",
+            "--path-mappings=" .. REMOTE_CLANGD_ROOT .. "=/media/psf/repos/agv1" },
+          vim.deepcopy(clangd_args))
+      else
+        clangd_cmd = vim.list_extend({ "clangd" }, vim.deepcopy(clangd_args))
+      end
+      vim.lsp.config("clangd", {
+        cmd = clangd_cmd,
         capabilities = capabilities,
-        cmd = {
-          "clangd",
-          "--background-index",
-          "--header-insertion=iwyu",
-          "--completion-style=detailed",
-          "--function-arg-placeholders",
-          "--fallback-style=llvm",
-        },
+        on_attach = on_attach,
       })
 
       -- Lua-specific setup
@@ -110,15 +136,16 @@ return {
   -- Telescope for fuzzy finding (used for references, etc.)
   {
     "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+      { "<leader>fg", "<cmd>Telescope live_grep<cr>",  desc = "Live grep" },
+      { "<leader>fb", "<cmd>Telescope buffers<cr>",    desc = "Find buffers" },
+      { "<leader>fh", "<cmd>Telescope help_tags<cr>",  desc = "Help tags" },
+    },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("telescope").setup()
-
-      -- Keybindings
-      vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>', { desc = 'Find files' })
-      vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>', { desc = 'Live grep' })
-      vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', { desc = 'Find buffers' })
-      vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', { desc = 'Help tags' })
 
       -- Emacs 風 <C-x><C-f> は init.lua の vim.g.use_emacs_bindings フラグで制御。
       if vim.g.use_emacs_bindings then

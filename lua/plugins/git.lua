@@ -2,6 +2,7 @@ return {
   -- Git signs in the gutter
   {
     "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("gitsigns").setup({
         signs = {
@@ -85,12 +86,15 @@ return {
   -- Lazygit integration
   {
     "kdheepak/lazygit.nvim",
+    cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile" },
+    keys = {
+      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+    },
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    config = function()
-      vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = 'LazyGit' })
-
+    -- gh CLI 系キーマップは lazygit 本体のロードに依存しないため init で常時登録する。
+    init = function()
       -- gh CLI: browser-based PR workflow (uses .github/pull_request_template.md)
       if vim.fn.executable("gh") == 1 then
         vim.keymap.set('n', '<leader>gP', ':!gh pr create --web<CR>', { desc = 'Create PR (browser)' })
@@ -107,6 +111,13 @@ return {
     cond = function()
       return vim.fn.executable("gh") == 1
     end,
+    cmd = "Octo",
+    ft = "octo",
+    keys = {
+      { "<leader>op", "<cmd>Octo pr list<cr>",      desc = "List PRs" },
+      { "<leader>oi", "<cmd>Octo issue list<cr>",   desc = "List issues" },
+      { "<leader>or", "<cmd>Octo review start<cr>", desc = "Start PR review" },
+    },
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope.nvim',
@@ -282,13 +293,15 @@ return {
   -- Diffview for better diff viewing
   {
     "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory", "DiffviewFocusFiles", "DiffviewToggleFiles", "DiffviewRefresh" },
+    keys = {
+      { "<leader>dv", "<cmd>DiffviewOpen<cr>",        desc = "Open diffview" },
+      { "<leader>dc", "<cmd>DiffviewClose<cr>",       desc = "Close diffview" },
+      { "<leader>dh", "<cmd>DiffviewFileHistory<cr>", desc = "File history" },
+    },
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
       require("diffview").setup()
-
-      vim.keymap.set('n', '<leader>dv', ':DiffviewOpen<CR>', { desc = 'Open diffview' })
-      vim.keymap.set('n', '<leader>dc', ':DiffviewClose<CR>', { desc = 'Close diffview' })
-      vim.keymap.set('n', '<leader>dh', ':DiffviewFileHistory<CR>', { desc = 'File history' })
     end,
   },
 }

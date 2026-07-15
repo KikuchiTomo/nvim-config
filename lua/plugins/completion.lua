@@ -2,6 +2,7 @@ return {
   -- Auto-completion
   {
     "hrsh7th/nvim-cmp",
+    event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
@@ -91,12 +92,14 @@ return {
   -- Snippets
   {
     "L3MON4D3/LuaSnip",
+    lazy = true,
     version = "v2.*",
     build = "make install_jsregexp",
   },
 
   {
     "rafamadriz/friendly-snippets",
+    lazy = true,
   },
 
   -- Auto pairs for brackets and quotes

@@ -7,6 +7,7 @@ return {
     config = function()
       require("tokyonight").setup({
         style = "night",
+        -- 背景透過を無効化（カラースキームの背景色を使う）
         transparent = false,
         terminal_colors = true,
         styles = {
@@ -17,6 +18,10 @@ return {
           sidebars = "dark",
           floats = "dark",
         },
+        -- split の境界線がデフォルトだと背景に溶けて見づらいため明るい色に上書き
+        on_highlights = function(hl, c)
+          hl.WinSeparator = { fg = c.blue, bold = true }
+        end,
       })
       vim.cmd([[colorscheme tokyonight]])
     end,
@@ -25,6 +30,7 @@ return {
   -- Status line
   {
     "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("lualine").setup({
@@ -49,6 +55,7 @@ return {
   -- Buffer line
   {
     "akinsho/bufferline.nvim",
+    event = "VeryLazy",
     dependencies = "nvim-tree/nvim-web-devicons",
     config = function()
       require("bufferline").setup({
@@ -131,6 +138,7 @@ return {
   -- Notify for better notifications
   {
     "rcarriga/nvim-notify",
+    lazy = true,
     config = function()
       vim.notify = require("notify")
       require("notify").setup({
@@ -144,6 +152,7 @@ return {
   -- Noice for better UI
   {
     "folke/noice.nvim",
+    event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
